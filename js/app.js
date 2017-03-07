@@ -57,4 +57,26 @@
   };
 
   // ADD YOUR CODE HERE
+  $('form').submit(function(e){
+    var search = $('input[name=search]').val();
+    if(search != ''){
+      $.getJSON('http://omdbapi.com/?s=' + search + '', function(data){
+        for(var i = 0; i < data['Search'].length; i++){
+          var keys = Object.keys(data['Search'][i]);
+          var values = Object.values(data['Search'][i]);
+          var newObj = {};
+          for(var j = 0; j < keys.length; j++){
+            if(keys[j].includes('imdb')){
+              keys[j] = keys[j].replace(/imdb/ig,'');
+            }
+            newObj[keys[j].toLowerCase()] = values[j];
+          }
+
+          movies.push(newObj);
+        }
+      });
+    }
+    renderMovies();
+    e.preventDefault();
+  });
 })();
